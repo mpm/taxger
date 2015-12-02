@@ -2,7 +2,7 @@ class MethodNode < Node
   def initialize(element, options = {})
     @options = options
     @name = element.attr('name')
-    @body = SourceNode.new(element.children)
+    @body = SourceNode.new(element.xpath('./*'))
     super()
   end
 
