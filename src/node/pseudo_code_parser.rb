@@ -44,6 +44,11 @@ class PseudoCodeParser
       @tokens << " #{@buffer.getch} "
     elsif ['.', '(', ')', '[', ']'].include?(@buffer.peek(1))
       @tokens << @buffer.getch
+    elsif @buffer.rest == ';'
+      @buffer.getch
+      # some older files (< 2012) have semicolons at the end of some lines.
+      # we ignore this if it is the last character.
+      puts "INFO: Ignoring ';' character at EOL (should be save)"
     else
       error('Unexpected token')
     end
