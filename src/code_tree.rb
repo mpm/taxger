@@ -33,7 +33,7 @@ class CodeTree
 
   def parse_methods
     comments = []
-    @xml.xpath('//METHODS').children.each do |line|
+    @xml.xpath('/PAP/METHODS/METHOD').each do |line|
       if Node.is_comment?(line)
         comments << CommentNode.new(line)
       elsif Node.is_text?(line)

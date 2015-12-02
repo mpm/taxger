@@ -4,7 +4,7 @@ class InitializerNode < Node
     @name = element.attr('name')
     @instance_vars = instance_vars
     @var = var
-    @body = SourceNode.new(element.children)
+    @body = SourceNode.new(element.xpath('./*'))
     super()
   end
 
