@@ -1,6 +1,10 @@
 class CommentNode < Node
   def initialize(element)
-    @comments = element.inner_text.split("\n").map(&:strip)
+    if element.is_a?(String)
+      @comments = [element]
+    else
+      @comments = element.inner_text.split("\n").map(&:strip)
+    end
     super()
   end
 
