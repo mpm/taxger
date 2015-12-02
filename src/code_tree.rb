@@ -12,6 +12,7 @@ class CodeTree
     @var[:inputs] = @xml.css('INPUT').map { |e| e.attr('name') }
     @var[:internals] = @xml.css('INTERNAL').map { |e| e.attr('name') }
     @var[:constants] = @xml.css('CONSTANT').map { |e| e.attr('name') }
+    @instance_vars = []
     PseudoCode.set_vars(@var)
     parse_vars
     parse_methods
@@ -24,10 +25,10 @@ class CodeTree
   private
 
   def parse_vars
+    @instance_vars << VarBlockNode.new(@xml.css('INPUTS').first, tag: :input, show_type: true)
+    @instance_vars << VarBlockNode.new(@xml.css('OUTPUTS').first, tag: :output, show_type: true)
+    @instance_vars << VarBlockNode.new(@xml.css('INTERNALS').first, tag: :internal)
     @nodes << VarBlockNode.new(@xml.css('CONSTANTS').first, tag: :constant)
-    #@nodes << VarBlockNode.new(@xml.css('INTERNALS').first, tag: :internal)
-    #@nodes << VarBlockNode.new(@xml.css('INPUTS').first, tag: :input, show_type: true)
-    #@nodes << VarBlockNode.new(@xml.css('OUTPUTS').first, tag: :output, show_type: true)
   end
 
   def parse_methods
@@ -43,7 +44,7 @@ class CodeTree
         @nodes << MethodNode.new(line, description: comments)
         comments = []
       elsif line.name == 'MAIN'
-        @nodes << InitializerNode.new(line, description: comments)
+        @nodes << InitializerNode.new(line, @instance_vars, @var, description: comments)
         comments = []
       else
         raise UnknownTagError.new(line)
@@ -70,11 +71,8 @@ class PseudoCode
   end
 
   def self.parse_expr(pseudo_code)
-    (@instance_vars).each do |v|
-      pseudo_code.gsub!(v, "@#{v.downcase}")
-    end
-    c = pseudo_code.tr(' ', '')
-    "-- #{c} --"
+    parser = PseudoCodeParser.new(pseudo_code.strip, @instance_vars)
+    parser.tokens.join
   end
 
   def self.parse_method_name(name)
@@ -89,15 +87,36 @@ class PseudoCode
     end
   end
 
-  def self.parse_default(default)
-    if default == nil
-      'nil'
-    elsif %w(0 1 1.0).include?(default)
-      default.to_s
-    elsif ['new BigDecimal(0)', 'BigDecimal.ZERO'].include?(default)
-      'BigDecimal.new(0)'
+  def self.parse_default(default, type)
+    if default
+      parser = PseudoCodeParser.new(default.strip, @instance_vars)
+      parser.tokens.join
     else
-      raise "Unknown default: #{default}"
+      case type
+      when 'int'
+        '0'
+      when 'double'
+        '0.0'
+      when 'float'
+        '0.0'
+      when 'BigDecimal'
+        'BigDecimal.new(0)'
+      end
+    end
+  end
+
+  def self.parse_constant_value(value)
+    if value[0] == '{'
+      list = value[1..-2].split(',').map do |field|
+        PseudoCodeParser.new(field.strip, @instance_vars).tokens.join
+      end
+      lines = []
+      while (list != [])
+        lines << list.shift(4)
+      end
+      '[' + lines.map { |items| items.join(', ') }.join(",\n#{' ' * 20}") + ']'
+    else
+      PseudoCodeParser.new(value.strip, @instance_vars).tokens.join
     end
   end
 end
@@ -109,16 +128,24 @@ class BigDecimal
     self * value
   end
 
-  def substract(value)
+  def subtract(value)
     self - value
   end
 
-  def divide(value, scale = 0, rounding=nil)
-    self / value
+  def divide(value, scale = nil, rounding=nil)
+    if scale
+      (self / value).set_scale(scale, rounding)
+    else
+      self / value
+    end
+  end
+
+  def add(value)
+    self + value
   end
 
   def set_scale(scale, rounding=nil)
-
+    self.round(scale, rounding)
   end
 
   def compare_to(value)
@@ -132,6 +159,22 @@ class BigDecimal
   end
 
   def self.value_of(float)
-    new(float)
+    new(float, 16)
+  end
+
+  def self.ZERO
+    BigDecimal.new(0)
+  end
+
+  def self.ONE
+    BigDecimal.new(1)
+  end
+
+  def self.ROUND_UP
+    BigDecimal::ROUND_UP
+  end
+
+  def self.ROUND_DOWN
+    BigDecimal::ROUND_DOWN
   end
 end

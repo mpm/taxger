@@ -6,7 +6,7 @@ class ClassNode < Node
   end
 
   def render
-    output "Class #{@name}"
+    output "class #{@name}"
     ident do
       output(@content)
     end

@@ -24,9 +24,9 @@ class VarBlockNode < Node
           output comments
         end
         if line.attr('value')
-          value = line.attr('value')
+          value = PseudoCode.parse_constant_value(line.attr('value'))
         else
-          value = PseudoCode.parse_default(line.attr('default'))
+          value = PseudoCode.parse_default(line.attr('default'), line.attr('type'))
         end
         output "#{PseudoCode.parse_var(line.attr('name')).ljust(15)} = #{value.ljust(20)}#{type}"
         comments = []
@@ -37,4 +37,3 @@ class VarBlockNode < Node
     linefeed
   end
 end
-

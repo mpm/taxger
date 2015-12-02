@@ -26,7 +26,7 @@ class Node
 
   def output(node)
     if node.is_a?(String)
-      @output << "#{'  ' * @@ident}#{node}"
+      @output << "#{'  ' * @@ident}#{node}".rstrip
     elsif node.is_a?(Node)
       @output += node.render
     elsif node.is_a?(Array)
