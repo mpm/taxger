@@ -2,6 +2,7 @@ class PseudoCodeParser
   attr_reader :tokens
 
   NUMBER = /^-?\d+/
+  IDENTIFIER = /\w+/
   RESERVED = {
     multiply:  'multiply',
     divide:    'divide',
@@ -57,9 +58,16 @@ class PseudoCodeParser
   def parse_number_or_identifier
     skip_spaces
     if @buffer.check(NUMBER)
-      @tokens.push(@buffer.scan(NUMBER))
-    elsif @buffer.check(/\w+/)
-      token = @buffer.scan(/\w+/)
+      result = @tokens.push(@buffer.scan(NUMBER))
+
+      # remove numeric literal data types (like '0.01D'). these occur in the 2011 XML file
+      if %w(D L).include?(@buffer.peek(1))
+        @buffer.getch
+      end
+
+      result
+    elsif @buffer.check(IDENTIFIER)
+      token = @buffer.scan(IDENTIFIER)
       if RESERVED[token.to_sym]
         token = RESERVED[token.to_sym]
       else
