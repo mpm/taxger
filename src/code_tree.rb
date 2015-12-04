@@ -1,5 +1,3 @@
-require './node/node.rb'
-
 class CodeTree
   attr_accessor :nodes
 
@@ -19,7 +17,7 @@ class CodeTree
   end
 
   def render
-    ClassNode.new(@xml.css('PAP').attr('name'), @nodes).render
+    ClassNode.new(@xml.css('PAP').attr('name'), @nodes, ['Taxger', 'Lohnsteuer']).render
   end
 
   private

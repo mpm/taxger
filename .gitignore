@@ -7,3 +7,5 @@
 /pkg/
 /spec/reports/
 /tmp/
+/src/xml/*.xml
+/src/generated/*.rb
