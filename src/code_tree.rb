@@ -1,7 +1,8 @@
 class CodeTree
   attr_accessor :nodes
 
-  def initialize(xml)
+  def initialize(xml, class_name = nil)
+    @class_name = class_name
     @xml = xml
     @nodes = []
     @internals = []
@@ -17,7 +18,7 @@ class CodeTree
   end
 
   def render
-    ClassNode.new(@xml.css('PAP').attr('name'), @nodes, ['Taxger', 'Lohnsteuer']).render
+    ClassNode.new(@class_name || @xml.css('PAP').attr('name'), @nodes, ['Taxger', 'Lohnsteuer']).render
   end
 
   private

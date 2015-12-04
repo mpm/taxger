@@ -12,11 +12,11 @@ task :default => :spec
 namespace :taxger do
   namespace :source do
     task :download do
-      Converter.download_all!
+      Taxger::Converter.download_all!
     end
 
     task :generate do
-      Converter.generate_all!
+      Taxger::Converter.generate_all!
     end
   end
 end

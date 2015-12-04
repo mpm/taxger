@@ -16,44 +16,46 @@ require 'node/pseudo_code_parser.rb'
 
 require 'code_tree.rb'
 
-class Converter
-  XML_PATH = File.expand_path('../xml/', __FILE__)
-  GENERATED_PATH = File.expand_path('../generated/', __FILE__)
-  URI = 'https://www.bmf-steuerrechner.de/pruefdaten/'
-  FILES = [
-  'Lohnsteuer2016.xml',
-  'Lohnsteuer2015Dezember.xml',
-  'Lohnsteuer2015BisNovember.xml',
-  'Lohnsteuer2014.xml',
-  'Lohnsteuer2013_2.xml',
-  'Lohnsteuer2012.xml',
-  'Lohnsteuer2011Dezember.xml',
-  'Lohnsteuer2011BisNovember.xml',
-  'Lohnsteuer2010Big.xml',
-  'Lohnsteuer2009Big.xml',
-  'Lohnsteuer2008Big.xml',
-  'Lohnsteuer2007Big.xml',
-  'Lohnsteuer2006Big.xml']
+module Taxger
+  class Converter
+    XML_PATH = File.expand_path('../xml/', __FILE__)
+    GENERATED_PATH = File.expand_path('../generated/', __FILE__)
+    URI = 'https://www.bmf-steuerrechner.de/pruefdaten/'
+    FILES = {
+    'Lohnsteuer2016.xml'            => 'Lohnsteuer2016',
+    'Lohnsteuer2015Dezember.xml'    => 'Lohnsteuer2015Dezember',
+    'Lohnsteuer2015BisNovember.xml' => 'Lohnsteuer2015',
+    'Lohnsteuer2014.xml'            => 'Lohnsteuer2014',
+    'Lohnsteuer2013_2.xml'          => 'Lohnsteuer2013',
+    'Lohnsteuer2012.xml'            => 'Lohnsteuer2012',
+    'Lohnsteuer2011Dezember.xml'    => 'Lohnsteuer2011Dezember',
+    'Lohnsteuer2011BisNovember.xml' => 'Lohnsteuer2011',
+    'Lohnsteuer2010Big.xml'         => 'Lohnsteuer2010',
+    'Lohnsteuer2009Big.xml'         => 'Lohnsteuer2009',
+    'Lohnsteuer2008Big.xml'         => 'Lohnsteuer2008',
+    'Lohnsteuer2007Big.xml'         => 'Lohnsteuer2007',
+    'Lohnsteuer2006Big.xml'         => 'Lohnsteuer2006'}
 
-  def self.download_all!
-    FILES.each do |file|
-      puts "Downloading #{file}"
-      `curl #{URI}#{file} -s -o #{File.join(XML_PATH, file)}`
+    def self.download_all!
+      FILES.keys.each do |file|
+        puts "Downloading #{file}"
+        `curl #{URI}#{file} -s -o #{File.join(XML_PATH, file)}`
+      end
     end
-  end
 
-  def self.generate_all!
-    FILES.each do |file|
-      generate_file(file)
+    def self.generate_all!
+      FILES.each do |file, class_name|
+        generate_file(file, class_name)
+      end
     end
-  end
 
-  def self.generate_file(file)
-    code = CodeTree.new(Nokogiri::XML(File.read(File.join(XML_PATH, file))))
-    name = file.split('.').first.downcase
-    puts "Generating #{name}.rb"
-    File.open(File.join(GENERATED_PATH, "#{name}.rb"), 'w+') do |f|
-      f.puts code.render
+    def self.generate_file(file, class_name)
+      code = CodeTree.new(Nokogiri::XML(File.read(File.join(XML_PATH, file))), class_name)
+      name = file.split('.').first.downcase
+      puts "Generating #{name}.rb"
+      File.open(File.join(GENERATED_PATH, "#{class_name.downcase}.rb"), 'w+') do |f|
+        f.puts code.render
+      end
     end
   end
 end
