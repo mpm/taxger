@@ -59,6 +59,3 @@ module Taxger
     end
   end
 end
-
-#require './generated/lohnsteuer2016.rb'
-#@s = Lohnsteuer2016Big.new(stkl: 1, lzz: 1, re4: BigDecimal.new(70000 * 100))

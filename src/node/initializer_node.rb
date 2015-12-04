@@ -9,6 +9,10 @@ class InitializerNode < Node
   end
 
   def render
+    @var[:outputs].map(&:downcase).each do |field|
+      output "attr_accessor :#{field}"
+    end
+    linefeed
     output('INPUT_VARS = ' + @var[:inputs].map(&:downcase).map(&:to_sym).inspect)
     output('OUTPUT_VARS = ' + @var[:outputs].map(&:downcase).map(&:to_sym).inspect)
     if @options[:description] && @options[:description].length > 0
@@ -23,12 +27,6 @@ class InitializerNode < Node
       output 'end'
       linefeed
       output @body
-    end
-    output('end')
-    linefeed
-    output('def results')
-    ident do
-      output 'Hash[OUTPUT_VARS.map { |key| [key, instance_variable_get("@#{key}")] }]'
     end
     output('end')
     linefeed

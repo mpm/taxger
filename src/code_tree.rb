@@ -32,6 +32,7 @@ class CodeTree
 
   def parse_methods
     comments = []
+    @nodes << InitializerNode.new(@xml.xpath('/PAP/METHODS/MAIN').first, @instance_vars, @var)
     @xml.xpath('/PAP/METHODS/METHOD').each do |line|
       if Node.is_comment?(line)
         comments << CommentNode.new(line)
@@ -41,9 +42,6 @@ class CodeTree
         end
       elsif line.name == 'METHOD'
         @nodes << MethodNode.new(line, description: comments)
-        comments = []
-      elsif line.name == 'MAIN'
-        @nodes << InitializerNode.new(line, @instance_vars, @var, description: comments)
         comments = []
       else
         raise UnknownTagError.new(line)
