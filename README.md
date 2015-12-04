@@ -6,6 +6,15 @@ Currently supported is calculating Lohnsteuer. To achieve this,
 The pseudo code describing tax caluculations from the Minstery of
 Finance is used to automatically create Ruby code from this.
 
+__(German description for SEO purposes):__
+
+Dieses Gem enthält Routinen zum Berechnen von Steuern in Deutschland
+(Lohnsteuer).
+
+Der Programmcode zur Berechnung der Lohnsteuer wurde automatisch anhand
+der vom Bundesministerium für Finanzen zur Verfügung gestellten
+Pseudocode-Vorlagen erstellt.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -24,7 +33,31 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Lohnsteuer
+
+```ruby
+require 'taxger'
+
+# calculate Lohnsteuer for 2015:
+# stkl: 1, # Steuerklasse I (stkl), 70.000,00 EUR
+# lzz: 1,  # Lohnzahlungszeitraum Jährlich (Salary re4 contains yearly
+#          # salary)
+# re4: 70_000 * 100 # Salary is 70.000,00 EUR
+tax = Lohnsteuer.calculate(2015, stkl: 1, lzz: 1, re4: 70_000 * 100)
+puts tax.lstlzz # Lohnsteuer für Lohnzahlungszeitraum (Income tax for
+                # specified interval of one year
+```
+
+Have a look into the files in `lib/taxger/lohnsteuer/*.rb` to see
+possible values.
+The `initialize` method contains all parameters below the `# INPUTS`
+section- comments are taken from the official pseudo code sources.
+
+Resulting values are listed under `# OUTPUTS` with comments (and can be
+accessed with getter methods under the same name).
+
+[Further documentation on field names is available from official
+government resources](https://www.bmf-steuerrechner.de/interface/pap.jsp)
 
 ## Development
 
