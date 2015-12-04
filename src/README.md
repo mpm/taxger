@@ -112,6 +112,25 @@ Newer files from the Ministery of Finance use the following syntax:
 </IF>
 ```
 
+### TODO
+
+`Lohnsteuer2012.xml` contains namespace references to *some* variables.
+The parser doesn't deal with it, so they must be removed manually from
+the Ruby source.
+
+`lib/taxger/lohnsteuer/lohnsteuer2012.rb` Line 818:
+
+```ruby
+if @zre4vp.compare_to(Lohnsteuer2012Big.RENTBEMESSUNGSGR_WEST) == 1
+```
+should be changed to
+```ruby
+if @zre4vp.compare_to(RENTBEMESSUNGSGR_WEST) == 1
+```
+etc.
+
+This should be handled automatically in the future.
+
 ### Final words
 
 I would not consider this code to be a text book example on how to do
