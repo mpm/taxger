@@ -43,7 +43,7 @@ require 'taxger'
 # lzz: 1,  # Lohnzahlungszeitraum Jährlich (Salary re4 contains yearly
 #          # salary)
 # re4: 70_000 * 100 # Salary is 70.000,00 EUR
-tax = Lohnsteuer.calculate(2015, stkl: 1, lzz: 1, re4: 70_000 * 100)
+tax = Taxger::Lohnsteuer.calculate(2015, stkl: 1, lzz: 1, re4: 70_000 * 100)
 puts tax.lstlzz # Lohnsteuer für Lohnzahlungszeitraum (Income tax for
                 # specified interval of one year
 ```
@@ -58,6 +58,16 @@ accessed with getter methods under the same name).
 
 [Further documentation on field names is available from official
 government resources](https://www.bmf-steuerrechner.de/interface/pap.jsp)
+
+### Einkommensteuer
+```ruby
+require 'taxger'
+
+# calculate income tax for 2015:
+tax = Taxger::Einkommensteuer.calculate(2015, 70_000 * 100)
+puts tax.ekst # => 21138_00 (Income tax in cents)
+puts tax.solz # =>  1162_59 (Solidaritätszuschlag in cents)
+```
 
 ## Development
 
