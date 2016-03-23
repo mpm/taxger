@@ -11,7 +11,7 @@ module Taxger
 
     extend self
 
-    F = 10^-8
+    F = 10**-8
 
     ZONES = {
       '2015' => [
@@ -29,7 +29,13 @@ module Taxger
         if income >= zone_start
           taxable = income + subs
           tax = (a * (taxable * taxable) + b * taxable + c).to_i * 100
-          return Result.new(tax, tax * 0.055)
+
+          # Vereinfachte Berechnung des Solidaritätszuschlagsfreibetrags:
+          # Nicht gültig für Steuerklasse III (162 EUR statt 81 EUR) und abweichend,
+          # wenn Lohnsteuer in verschiedenen Monaten jeweils unter- und überhalb der
+          # Grenze lag.
+          solz = tax > 81_00 * 12 ? (tax * 0.055).to_i : 0
+          return Result.new(tax, solz)
         end
       end
       Result.new(0, 0)
