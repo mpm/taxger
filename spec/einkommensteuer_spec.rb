@@ -2,6 +2,10 @@ require 'spec_helper'
 
 module Taxger
   describe Einkommensteuer do
+    it 'raises an error on unsupported years' do
+      expect{ Einkommensteuer.calculate(2009, 0) }.to raise_exception(Einkommensteuer::Error)
+    end
+
     [
       ['2015', 260_000_00, 101_216_00, 5_566_88],
       ['2015',  70_000_00,  21_138_00, 1_162_59],

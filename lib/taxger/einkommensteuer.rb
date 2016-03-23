@@ -1,5 +1,6 @@
 module Taxger
   module Einkommensteuer
+    class Error < StandardError; end
     class Result
       attr_accessor :ekst, :solz
 
@@ -23,6 +24,10 @@ module Taxger
     }
 
     def calculate(year, income)
+      if !ZONES[year.to_s]
+        raise Einkommensteuer::Error.new("No data available for year #{year}")
+      end
+
       income = income * 0.01
       ZONES[year.to_s].reverse.each do |zone|
         (zone_start, zone_end, a, b, c, subs) = zone
