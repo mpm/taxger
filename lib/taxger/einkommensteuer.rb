@@ -78,17 +78,20 @@ module Taxger
       ],
     }
 
-    def calculate(year, income)
+    def calculate(year, income, pay_taxes_on = nil)
       if !ZONES[year.to_s]
         raise Einkommensteuer::Error.new("No data available for year #{year}")
       end
 
+      pay_taxes_on ||= income
+      pay_taxes_on = pay_taxes_on * 0.01
       income = income * 0.01
       ZONES[year.to_s].reverse.each do |zone|
         (zone_start, a, b, c) = zone
         if income >= zone_start + 1
           taxable = income - zone_start
-          tax = (a * (taxable ** 2) + b * taxable + c).to_i * 100
+          tax = (a * (taxable ** 2) + b * taxable + c)#.to_i * 100
+          tax = (((tax/income)*pay_taxes_on)).to_i * 100
 
           # Vereinfachte Berechnung des Solidaritätszuschlagsfreibetrags:
           # Nicht gültig für Steuerklasse III (162 EUR statt 81 EUR) und abweichend,
