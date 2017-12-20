@@ -12,6 +12,8 @@ require 'taxger/lohnsteuer/lohnsteuer2014'
 require 'taxger/lohnsteuer/lohnsteuer2015'
 require 'taxger/lohnsteuer/lohnsteuer2015dezember'
 require 'taxger/lohnsteuer/lohnsteuer2016'
+require 'taxger/lohnsteuer/lohnsteuer2017'
+require 'taxger/lohnsteuer/lohnsteuer2018'
 
 module Taxger
   module Lohnsteuer
