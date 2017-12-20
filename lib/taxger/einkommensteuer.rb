@@ -17,7 +17,7 @@ module Taxger
     ZONES = {
       # Values are taken from this table:
       # https://de.wikipedia.org/wiki/Einkommensteuer_(Deutschland)#Entwicklung_der_Parameter
-      # Non-existent parameters for E(i) with i > 3 have to be replaced with nil 
+      # Non-existent parameters for E(i) with i > 3 have to be replaced with nil
       # Non-existent parameters for a(i) with i > 2 have to be 0.
       '2010' => [
          #   E(0),   a(1) * F,   b(1),        0
@@ -76,6 +76,13 @@ module Taxger
          [ 53_665,          0,   0.42,     -8394.14 + 0.42 * 53_665],
          [254_447,          0,   0.45,   -16027.52 + 0.45 * 254_447]
       ],
+
+      '2017' => [
+         [  8_820, 1_007.27 * F,     0.14,   0],
+         [ 13_769,   223.76 * F,   0.2397,   939.57],
+         [ 54_057,            0,     0.42,   14_228.5],
+         [256_303,            0,     0.45,   99_171.82]
+      ]
     }
 
     def calculate(year, income, pay_taxes_on = nil)
