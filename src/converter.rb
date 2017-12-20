@@ -22,6 +22,8 @@ module Taxger
     GENERATED_PATH = File.expand_path('../generated/', __FILE__)
     URI = 'https://www.bmf-steuerrechner.de/pruefdaten/'
     FILES = {
+    'Lohnsteuer2018.xml'            => 'Lohnsteuer2018',
+    'Lohnsteuer2017.xml'            => 'Lohnsteuer2017',
     'Lohnsteuer2016.xml'            => 'Lohnsteuer2016',
     'Lohnsteuer2015Dezember.xml'    => 'Lohnsteuer2015Dezember',
     'Lohnsteuer2015BisNovember.xml' => 'Lohnsteuer2015',
