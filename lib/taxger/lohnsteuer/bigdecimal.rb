@@ -2,7 +2,7 @@ require 'bigdecimal'
 
 module Taxger
   module Lohnsteuer
-    class BigDecimal < Numeric::BigDecimal
+    class BigDecimal < BigDecimal
       def multiply(value)
         BigDecimal.new(self * value)
       end
