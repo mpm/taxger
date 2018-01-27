@@ -1,3 +1,5 @@
+require 'bigdecimal'
+
 module Taxger
   module Lohnsteuer
     class BigDecimal < Numeric::BigDecimal
