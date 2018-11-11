@@ -83,7 +83,17 @@ Finance.
 
 To regenerate or update these files, have a look into `src/README.md`.
 
-## Contributing
+## Contributors
+
+Original author (2015):
+
+* [Malte Münchert](https://github.com/mpm)
+
+Contributions from [Wundertax GmbH](https://www.wundertax.de/)
+
+* [@jalyna](https://github.com/jalyna)
+* [@bryszard](https://github.com/bryszard)
+
+# Submitting contributions
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/mpm/taxger. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
-
